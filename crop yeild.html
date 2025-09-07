@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI-Powered Crop Yield Prediction & Optimization</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      .hero {
+        padding: 4rem 0;
+        background: linear-gradient(90deg, #e9f7ef, #f0fbff);
+      }
+      .card-quiet { background: #fcfffc; }
+      .small-muted { font-size: .85rem; color: #6c757d; }
+      /* responsive image helper */
+      .hero-img { max-height: 220px; object-fit: contain; }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">AgriAI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMain">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+            <li class="nav-item"><a class="nav-link" href="#predict">Predict</a></li>
+            <li class="nav-item"><a class="nav-link" href="#optimize">Optimize</a></li>
+            <li class="nav-item"><a class="nav-link" href="#data">Data</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <h1 class="display-6 fw-bold">AI-Powered Crop Yield Prediction & Optimization</h1>
+            <p class="lead">Use machine learning to forecast yields, recommend optimized inputs, and reduce risk — right from this dashboard.</p>
+            <div class="mt-3">
+              <a href="#predict" class="btn btn-primary me-2">Try a prediction</a>
+              <a href="#data" class="btn btn-outline-secondary">Upload data</a>
+            </div>
+            <p class="mt-3 small-muted">Tip: this is a frontend demo — connect the form to your ML endpoint to run real predictions.</p>
+          </div>
+          <div class="col-lg-6 text-center">
+            <!-- image from container: replace path if hosting elsewhere -->
+            <img src="/mnt/data/1d3deeae-08cc-436c-8ada-91c97ee6ebb4.png" alt="Crop Illustration" class="img-fluid hero-img">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="py-5">
+      <div class="container">
+
+        <!-- FEATURES -->
+        <section id="features" class="mb-5">
+          <div class="row gy-3">
+            <div class="col-md-4">
+              <div class="card card-quiet h-100 p-3">
+                <h5>Yield Forecasting</h5>
+                <p class="small-muted">Predict per-field yield using weather, soil, and management data.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-quiet h-100 p-3">
+                <h5>Input Optimization</h5>
+                <p class="small-muted">Get fertilizer and irrigation recommendations to maximize ROI and sustainability.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-quiet h-100 p-3">
+                <h5>Batch Predictions</h5>
+                <p class="small-muted">Upload CSVs for farm-wide batch predictions and download results.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="row">
+          <!-- PREDICTION FORM -->
+          <div id="predict" class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">Quick Yield Prediction</h5>
+                <p class="small-muted">Enter field metrics to get an instant mock prediction (client-side demo).</p>
+                <form id="predict-form">
+                  <div class="mb-3">
+                    <label class="form-label">Crop type</label>
+                    <select id="crop" class="form-select">
+                      <option value="wheat">Wheat</option>
+                      <option value="rice">Rice</option>
+                      <option value="maize">Maize</option>
+                      <option value="soy">Soybean</option>
+                    </select>
+                  </div>
+
+                  <div class="row gx-2">
+                    <div class="col-6 mb-3">
+                      <label class="form-label">Soil pH</label>
+                      <input type="number" step="0.1" class="form-control" id="ph" value="6.5">
+                    </div>
+                    <div class="col-6 mb-3">
+                      <label class="form-label">Soil moisture (%)</label>
+                      <input type="number" step="0.1" class="form-control" id="moist" value="30">
+                    </div>
+                  </div>
+
+                  <div class="row gx-2">
+                    <div class="col-6 mb-3">
+                      <label class="form-label">Avg Temp (°C)</label>
+                      <input type="number" step="0.1" class="form-control" id="temp" value="25">
+                    </div>
+                    <div class="col-6 mb-3">
+                      <label class="form-label">Rainfall (mm)</label>
+                      <input type="number" step="0.1" class="form-control" id="rain" value="200">
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Fertilizer applied (kg/ha)</label>
+                    <input type="number" step="1" class="form-control" id="fert" value="90">
+                  </div>
+
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <button type="button" class="btn btn-success me-2" id="predictBtn">Predict</button>
+                    <button type="button" class="btn btn-outline-secondary" id="clearBtn">Clear</button>
+                  </div>
+                </form>
+
+                <hr>
+                <div id="predictionResult" class="d-none">
+                  <h6>Prediction Result</h6>
+                  <p class="mb-1"><strong>Estimated yield:</strong> <span id="yieldVal">-</span> t/ha</p>
+                  <p class="small-muted">Recommendation: <span id="recText">-</span></p>
+                </div>
+
+                <div id="apiNote" class="mt-3 small-muted">
+                  <em>Connect this form to your backend prediction API: send POST /api/predict with JSON payload.</em>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHARTS & ANALYSIS -->
+          <div id="optimize" class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">Field Analytics</h5>
+                <p class="small-muted">Interactive charts summarize historical yields and sensitivity to inputs.</p>
+                <canvas id="yieldChart" height="200"></canvas>
+                <div class="mt-3 small-muted">* This chart uses demo data. Replace with real backend results.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATA UPLOAD -->
+        <section id="data" class="mt-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Upload CSV for Batch Predictions</h5>
+              <p class="small-muted">CSV must contain columns: crop, ph, moisture, temp, rainfall, fertilizer, field_id (optional).</p>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <input class="form-control" type="file" id="csvFile" accept=".csv">
+                  <div class="form-text">Select a CSV file to preview and run batch predictions (client-side demo).</div>
+                </div>
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                  <button class="btn btn-primary" id="previewBtn">Preview</button>
+                  <button class="btn btn-success" id="batchPredictBtn">Run Batch Predict</button>
+                  <a id="downloadLink" class="btn btn-outline-secondary d-none">Download Results</a>
+                </div>
+              </div>
+
+              <hr>
+              <div id="csvPreview" class="table-responsive mt-3 d-none">
+                <table class="table table-sm table-striped" id="previewTable"></table>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-light py-3 mt-5">
+      <div class="container d-flex justify-content-between small-muted">
+        <div>© <strong>AgriAI</strong> — Frontend Demo</div>
+        <div>Built with Bootstrap • Chart.js</div>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Demo JS: mock prediction + CSV preview + Chart -->
+    <script>
+      // Simple client-side mock predictor: replace with API call for real predictions
+      function mockPredict(inputs) {
+        // naive heuristic model: base yield by crop + adjustments
+        const base = { wheat: 3.2, rice: 4.0, maize: 5.0, soy: 2.8 };
+        let y = base[inputs.crop] || 3.0; // tons/ha
+        // pH effect
+        const phDiff = Math.abs(inputs.ph - 6.5);
+        y *= Math.max(0.6, 1 - phDiff * 0.05);
+        // moisture and rainfall
+        y *= 1 + (inputs.moist - 30)/300;
+        y *= 1 + (inputs.rain - 200)/2000;
+        // temp optimum ~ 22-28
+        const tempDiff = Math.abs(inputs.temp - 25);
+        y *= Math.max(0.7, 1 - tempDiff * 0.03);
+        // fertilizer diminishing returns
+        y *= 1 + Math.tanh((inputs.fert - 50)/150) * 0.25;
+        // clamp
+        y = Math.max(0.2, Math.round(y*100)/100);
+        // simple recommendation
+        let rec = 'Inputs look good.';
+        if (inputs.ph < 5.5) rec = 'Soil pH low: consider liming.';
+        else if (inputs.moist < 20) rec = 'Soil moisture low: increase irrigation or moisture conservation.';
+        else if (inputs.fert < 60) rec = 'Consider increasing fertilizer to recommended rates.';
+        return { yield: y.toFixed(2), recommendation: rec };
+      }
+
+      document.getElementById('predictBtn').addEventListener('click', () => {
+        const inputs = {
+          crop: document.getElementById('crop').value,
+          ph: parseFloat(document.getElementById('ph').value) || 6.5,
+          moist: parseFloat(document.getElementById('moist').value) || 30,
+          temp: parseFloat(document.getElementById('temp').value) || 25,
+          rain: parseFloat(document.getElementById('rain').value) || 200,
+          fert: parseFloat(document.getElementById('fert').value) || 90,
+        };
+        const res = mockPredict(inputs);
+        document.getElementById('yieldVal').innerText = res.yield;
+        document.getElementById('recText').innerText = res.recommendation;
+        document.getElementById('predictionResult').classList.remove('d-none');
+        // update chart with single-point projection (demo)
+        addPointToChart(inputs.crop, parseFloat(res.yield));
+      });
+
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        document.getElementById('predict-form').reset();
+        document.getElementById('predictionResult').classList.add('d-none');
+      });
+
+      // Chart.js demo chart
+      const ctx = document.getElementById('yieldChart').getContext('2d');
+      const yieldChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["Year -2", "Year -1", "This Year"],
+          datasets: [{
+            label: 'Avg yield (t/ha)',
+            data: [3.1, 3.4, 3.2],
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: true } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      function addPointToChart(crop, value) {
+        // roll labels and push
+        const ds = yieldChart.data.datasets[0];
+        yieldChart.data.labels.push('Demo Prediction');
+        ds.data.push(value);
+        // keep last 6
+        if (yieldChart.data.labels.length > 6) {
+          yieldChart.data.labels.shift();
+          ds.data.shift();
+        }
+        yieldChart.update();
+      }
+
+      // CSV preview and batch predict (client-side mock)
+      const csvFileEl = document.getElementById('csvFile');
+      const previewBtn = document.getElementById('previewBtn');
+      const batchBtn = document.getElementById('batchPredictBtn');
+      const previewTable = document.getElementById('previewTable');
+      const csvPreview = document.getElementById('csvPreview');
+      const downloadLink = document.getElementById('downloadLink');
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n').map(l => l.trim());
+        if (!lines.length) return [];
+        const headers = lines[0].split(',').map(h => h.trim());
+        return lines.slice(1).map(line => {
+          const cols = line.split(',');
+          const obj = {};
+          headers.forEach((h,i) => obj[h] = cols[i] ? cols[i].trim() : '');
+          return obj;
+        });
+      }
+
+      previewBtn.addEventListener('click', () => {
+        const f = csvFileEl.files[0];
+        if (!f) { alert('Choose a CSV file first'); return; }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = parseCSV(e.target.result);
+          if (!data.length) { alert('No rows found'); return; }
+          // render small preview table (first 10 rows)
+          csvPreview.classList.remove('d-none');
+          previewTable.innerHTML = '';
+          const headers = Object.keys(data[0]);
+          const thead = '<thead><tr>' + headers.map(h => '<th>'+h+'</th>').join('') + '</tr></thead>';
+          const rows = data.slice(0,10).map(r => '<tr>' + headers.map(h => '<td>'+ (r[h]||'') +'</td>').join('') + '</tr>').join('');
+          previewTable.innerHTML = thead + '<tbody>' + rows + '</tbody>';
+        };
+        reader.readAsText(f);
+      });
+
+      batchBtn.addEventListener('click', () => {
+        const f = csvFileEl.files[0];
+        if (!f) { alert('Choose a CSV file first'); return; }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = parseCSV(e.target.result);
+          if (!data.length) { alert('No rows found'); return; }
+          // run mock predict on each row and attach yield
+          const headers = Object.keys(data[0]);
+          const outRows = data.map(row => {
+            const inputs = {
+              crop: (row.crop || 'wheat').toLowerCase(),
+              ph: parseFloat(row.ph) || 6.5,
+              moist: parseFloat(row.moisture || row.moist) || 30,
+              temp: parseFloat(row.temp) || 25,
+              rain: parseFloat(row.rainfall || row.rain) || 200,
+              fert: parseFloat(row.fertilizer || row.fert) || 90,
+            };
+            const r = mockPredict(inputs);
+            return { ...row, predicted_yield_t_ha: r.yield, recommendation: r.recommendation };
+          });
+          // prepare CSV content
+          const outHeaders = Object.keys(outRows[0]);
+          const csvContent = outHeaders.join(',') + '\n' + outRows.map(r => outHeaders.map(h => '"'+(r[h]||'')+'"').join(',')).join('\n');
+          // create blob download
+          const blob = new Blob([csvContent], {type: 'text/csv'});
+          const url = URL.createObjectURL(blob);
+          downloadLink.href = url;
+          downloadLink.download = 'predictions.csv';
+          downloadLink.classList.remove('d-none');
+          downloadLink.innerText = 'Download Predictions';
+          alert('Batch predictions complete (demo). Click Download Predictions.');
+        };
+        reader.readAsText(f);
+      });
+
+      // NOTE: For production, replace client-side logic with fetch calls to your backend (e.g., POST /api/predict and POST /api/batch_predict)
+
+    </script>
+  </body>
+</html>
